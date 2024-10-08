@@ -1,0 +1,11 @@
+{
+    "table1": {
+        "table_id": "1"
+    },
+    "demo_table2": {
+        "table_id": "2"
+    },
+    "demo_table3": {
+        "table_id": "3"
+    }
+}

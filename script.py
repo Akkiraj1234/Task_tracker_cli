@@ -1,7 +1,12 @@
-from database import *
+from database import Tables, Tasks
 
 
-
+def add(
+    object:Tables|Tasks,
+    name:str
+) -> None:
+    object.add(name)
+    
 
 
 
