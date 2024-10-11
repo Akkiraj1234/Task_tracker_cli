@@ -1,6 +1,5 @@
-import os
+from database import system, task, table, os
 import sys
-import json
 import argparse
 import time
 
@@ -11,56 +10,27 @@ if os.name == 'nt':
 else:
     import termios
     import tty
+
+
+def filter_dict(filter:dict, allowed_keys:dict|tuple) -> dict:
+    if callable(allowed_keys):
+        allowed_keys = set(allowed_keys.__code__.co_varnames[:allowed_keys.__code__.co_argcount])
     
+    elif isinstance(allowed_keys, (tuple, list)):
+        allowed_keys = set(allowed_keys)
+    
+    elif isinstance(allowed_keys, dict):
+        allowed_keys = set(allowed_keys.keys())
+    
+    return {k:v for k,v in filter.items() if k in allowed_keys}
 
-def load_data(path) -> dict:
-    if isinstance(path, tuple):
-        path = os.path.join(*path)
-        
-    try:
-        with open(path,'r', encoding='utf-8') as data:
-            return json.load(data)
-        
-    except (FileNotFoundError, json.JSONDecodeError):
-        return {}
-
-def save_data(path, data) -> None:
-    if isinstance(path, tuple):
-        path = os.path.join(*path)
-        
-    with open(path, 'w', encoding='utf-8') as json_data:
-        json.dump(data, json_data, indent=4)
-
-def delte_file(path) -> None:
-    pass
-
-def add_file(path, data) -> None:
-    pass
-
+    
 class info:
     def __init__(self) -> None:
-        self.setting = None
-        self.current_account = None
-        self.__group_data = None
-        self.update_info()
-    
-    @property
-    def group_list(self):
-        if self.__group_data is not None:
-            return 
-        self.__group_data = self.__group_data.keys()
-        return self.__group_data
-    
-    @property
-    def current_data(self):
-        if self.current_account:
-            return self.current_account
-        self.current_account = load_data(self.setting["study plan 1"])
-        return self.current_account
+        objects = {'Task':task, 'Table':table}
 
     def update_info(self):
-        self.group_data = load_data(TABLE_PATH)
-        self.setting = load_data(SETTING_PATH)
+        self.setting = system.load_data(system.SETTING_PATH)
 
 
 class CILcolor:
@@ -135,7 +105,7 @@ class CILcolor:
             string = f"{ansi_color_code}{string}\x1b[{code_end}m"
             
         return string
-    
+
 
 class SmartInput:
     """
@@ -301,17 +271,8 @@ class todo_table:
         )+ f"{' '*padding}└{'─'*col1}┴{'─'*(w-5-col1-col3-col4)}┴{'─'*col3}┴{'─'*col4}┘\n"
 
 
-
-FILE_PATH = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(FILE_PATH, 'database')
-TABLE_PATH = os.path.join(DB_PATH,'tables.json')
-SETTING_PATH = os.path.join(DB_PATH,'setting.json')
-
-utils = info()
-
-
 if __name__ == "__main__":
     new_input = SmartInput()
-    new_input.add_color({'hello':'red','add':'yellow','remove':'yellow'})
+    new_input.add_color({'hello':'red', 'add':'yellow', 'remove':'yellow'})
     some = new_input.input("please type something :) ")
     print(some)

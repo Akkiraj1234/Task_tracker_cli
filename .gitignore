@@ -2,4 +2,4 @@ venv/
 __pycache__/
 *.pyc
 *.pyo
-demo/
+/all_posible_test.txt
