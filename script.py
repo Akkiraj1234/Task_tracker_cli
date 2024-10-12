@@ -1,12 +1,12 @@
 from typing import Literal, Union
 from database import Tables, Tasks, setting , task, table
 
-
+#fix it with new things
 def add(
     name:str,
     object:Union[Tables, Tasks] = task,
     table:str = setting.defult_table,
-    mark:Literal['done','to-do','progress'] = "to_do",
+    mark:Literal['done','to_do','progress'] = "to_do",
     **kw
 ) -> None:
     """_summary_
@@ -16,11 +16,11 @@ def add(
         object (Tables | Tasks, optional): _description_. Defaults to Task.
         table (str, optional): the name of the table of id. Defaults to utils.defult_table.
     """
-    if mark not in ['done','to-do','progress']:
+    if mark not in ['done','to_do','progress']:
         print("some error will write in future")
-        mark = 'to-do'
+        mark = 'to_do'
     
-    object.add(
+    return object.add(
         name = name,
         mark = mark,
         inside = table,
@@ -31,7 +31,8 @@ def delete(
     id:str|int,
     object:Union[Tables, Tasks] = task,
     table:str = setting.defult_table,
-    cleardata:bool = False
+    cleardata:bool = False,
+    **kw
 ) -> None:
     """_summary_
 
@@ -41,16 +42,18 @@ def delete(
         table (str, optional): _description_. Defaults to setting.defult_table.
         cleardata (bool, optional): _description_. Defaults to False.
     """
-    object.delete(
+    return object.delete(
         id = id,
-        inside = table,
-        cleardata = cleardata
+        table = table,
+        cleardata = cleardata,
+        **kw
     )
 
 def show(
     id:str|int = None,
     object:Union[Tables, Tasks] = task,
     table:str = setting.defult_table,
+    **kw
 ) -> None:
     """_summary_
 
@@ -62,23 +65,33 @@ def show(
     """
     return object.show(
         id = id,
-        table = table
+        table = table,
+        **kw
     )
 
 def update(
     id:str|int,
-    new_name:str|int,
+    name:str = None,
+    description:str = None,
     object:Union[Tables, Tasks] = task,
     table:str = setting.defult_table,
+    **kw
 ) -> None:
     """_summary_
 
     Args:
         id (str | int): _description_
-        new_name (str | int): _description_
+        name (str, optional): _description_. Defaults to None.
+        description (str, optional): _description_. Defaults to None.
         object (Union[Tables, Tasks], optional): _description_. Defaults to task.
         table (str, optional): _description_. Defaults to setting.defult_table.
     """
+    object.update(
+        id = id,
+        name = name,
+        description = description,
+        table = table,
+    )
     
 
 
@@ -90,12 +103,21 @@ def update(
 
 
 if __name__ == '__main__':
-    pass
-    add('something',task, table='something',mark="to-do")
+    print(update('something',"something",description="hello world! :)",object=table))
+    # ==========================================
+    # print(delete(None,table,"something",True))
+    #==========================
+    # print('test-1-table-show',show(None,table),'\n')
+    # print('test-2-table-show',show('something',table),'\n')
+    # print('test-3-table-show',show('something1',table),'\n')
+    # print(show(None,task))
+    # print(show(None,task,"demo_table3"))
+    # add('something',task, table='something',mark="to-do")
     # delete("5", task, 'demo_table4')
     # add(
     #     name = 'no table task',
     #     object = task,
     #     mark = 'progress'
     # )
+    pass
 

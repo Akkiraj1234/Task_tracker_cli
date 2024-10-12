@@ -246,7 +246,7 @@ class Tables:
         # add a feature to get unique id which should be the best
         data = {
             'table_id': table_id,
-            'name': name,
+            'description': 'add the table description',
             'created_at': time.time(),
             'modified_at': time.time(),
         }
@@ -257,36 +257,70 @@ class Tables:
         system.add_file((system.DB_PATH, f"{table_id}.json"), {})
         
     def delete(self, **kw) -> None:
-        id = kw.get('id', None)
-        cleardata = kw.get('cleardata',False)
+        name_id = kw.get('table', None)
+        cleardata = kw.get('cleardata', False)
         
-        if not self.is_tableexists(id):
+        if not self.is_tableexists(name_id):
             raise database_error(f"name: {id} not exits, use valid name")
         
-        if self.data is None: self.__load()
-        
-        table_id = self.data.pop(id).get('table_id', None)
-        
+        table_id = self.data.get(name_id,{}).get('table_id', None)
         if not table_id:
             raise database_error(f"cant delete the {id} table is spasified with this name")
+            
+        if cleardata:
+            system.save_data((system.DB_PATH, f"{table_id}.json"),{})
+            return
         
+        self.data.pop(name_id,{})
         self.__update()
-        system.delete_file((system.DB_PATH, table_id))
+        system.delete_file((system.DB_PATH, f"{table_id}.json"))
     
     def show(self, **kw) -> None:
         if self.data or self.data is None:
             self.__load()
         
-        table_id = kw.get('id',None)
+        table_id = kw.get('id', None)
         
-        if table_id is None:
-            return self.data
+        if table_id is not None and not self.is_tableexists(table_id):
+            print( f"FAILED: there is no table exists with the name {table_id}")
         
-        if not self.is_tableexists(table_id):
-            return f"FAILED: there is no table exists with the name {table_id}"
-        
-        return self.data['table_id']
+        return self.data.get(table_id, self.data)
 
+    def update(self, **kw) -> None:
+        name_id = kw.get("id", None)
+        name = kw.get("name", None)
+        description = kw.get("description", None)
+        
+        if self.data or self.data is None:
+            self.__load()
+        
+        if not self.is_tableexists(name_id):
+            raise database_error(f"the table Not exists name : {name_id} ")
+        
+        #gathering the previous data -modifying info
+        defult_desc = self.data.get('description', 'add the table description')
+        
+        #modifying the info 
+        self.data[name_id]['description'] = description if description else defult_desc
+        
+        
+        #modifying name_id if exits
+        if name and self.is_tableexists(name):
+            self.__update()
+            raise database_error(f"cant change the name of table {name_id} to {name} table already exits with the name.")
+        
+        if name:
+            self.data[name] = self.data.get(name_id)
+            self.data.pop(name_id)
+            
+        self.__update()
+        
+        
+        
+        
+        
+    
+    
 class Tasks:
     def __init__(self) -> None:
         print('here ----------> ', setting.defult_table)
@@ -366,7 +400,17 @@ class Tasks:
         self.data.pop(id,None)
         self.__update()
 
-
+    def show(self, **kw) -> None:
+        name_id = kw.get('table')
+        
+        if not table.is_tableexists(name_id):
+            raise database_error("no name exits ")
+        
+        table_id = table.get_tableid_by_name(name_id)
+        self.__load(table_id)
+        
+        return self.data
+    
 system = System()
 setting = Setting()
 table = Tables()
