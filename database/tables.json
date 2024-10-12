@@ -1,16 +1,11 @@
 {
-    "table1": {
-        "table_id": "1"
-    },
-    "demo_table2": {
-        "table_id": "2"
-    },
     "demo_table3": {
-        "table_id": "3"
+        "table_id": "3",
+        "description": "Nothing here"
     },
     "something": {
         "table_id": "4",
-        "name": "something",
+        "description": "hello world! :)",
         "created_at": 1728649835.688255,
         "modified_at": 1728649835.688255
     }
