@@ -1,14 +1,14 @@
-from typing import Literal, Union
-from database import Tables, Tasks, setting , task, table
+from typing import Literal, Union, Any
 
-#fix it with new things
+
+# fix it with new things database management language
 def add(
-    name:str,
-    object:Union[Tables, Tasks] = task,
-    table:str = setting.defult_table,
-    mark:Literal['done','to_do','progress'] = "to_do",
+    name: str = None,
+    inside: str = None,           #setting.defult_table,
+    mark:str = None,              #Literal["done", "to_do", "progress"] = "to_do",
+    object =  None,               #Union[Tables, Tasks] = task,
     **kw
-) -> None:
+) -> Any:
     """_summary_
 
     Args:
@@ -16,24 +16,20 @@ def add(
         object (Tables | Tasks, optional): _description_. Defaults to Task.
         table (str, optional): the name of the table of id. Defaults to utils.defult_table.
     """
-    if mark not in ['done','to_do','progress']:
-        print("some error will write in future")
-        mark = 'to_do'
-    
     return object.add(
-        name = name,
-        mark = mark,
-        inside = table,
+        name=name, 
+        mark=mark,
+        inside=inside,
         **kw
     )
 
 def delete(
-    id:str|int,
-    object:Union[Tables, Tasks] = task,
-    table:str = setting.defult_table,
-    cleardata:bool = False,
+    id: str = None,
+    table: str = None,      #setting.defult_table,
+    cleardata: bool = None, #False,
+    object = None,          #Union[Tables, Tasks] = task,
     **kw
-) -> None:
+) -> Any:
     """_summary_
 
     Args:
@@ -43,18 +39,18 @@ def delete(
         cleardata (bool, optional): _description_. Defaults to False.
     """
     return object.delete(
-        id = id,
-        table = table,
-        cleardata = cleardata,
+        id=id,
+        table=table,
+        cleardata=cleardata,
         **kw
     )
 
 def show(
-    id:str|int = None,
-    object:Union[Tables, Tasks] = task,
-    table:str = setting.defult_table,
+    id: str | int = None,
+    table: str = None,    #setting.defult_table,
+    object = None,        #Union[Tables, Tasks] = task,
     **kw
-) -> None:
+) -> Any:
     """_summary_
 
     Args:
@@ -64,19 +60,20 @@ def show(
         cleardata (bool, optional): _description_. Defaults to False.
     """
     return object.show(
-        id = id,
-        table = table,
+        id=id,
+        table=table,
         **kw
     )
 
 def update(
-    id:str|int,
-    name:str = None,
-    description:str = None,
-    object:Union[Tables, Tasks] = task,
-    table:str = setting.defult_table,
+    id: str | int = None,
+    name: str = None,
+    status:str = None,
+    description: str = None,
+    table: str = None, #setting.defult_table,
+    object = None, #Union[Tables, Tasks] = task,
     **kw
-) -> None:
+) -> Any:
     """_summary_
 
     Args:
@@ -86,38 +83,23 @@ def update(
         object (Union[Tables, Tasks], optional): _description_. Defaults to task.
         table (str, optional): _description_. Defaults to setting.defult_table.
     """
-    object.update(
+    return object.update(
         id = id,
         name = name,
         description = description,
         table = table,
+        status = status
     )
-    
 
 
 
 
+class DatabaseManagmentLanguage:
+    def __init__(self, command:str):
+        
+        for i in command:
+            print(i)
 
 
-
-
-
-if __name__ == '__main__':
-    print(update('something',"something",description="hello world! :)",object=table))
-    # ==========================================
-    # print(delete(None,table,"something",True))
-    #==========================
-    # print('test-1-table-show',show(None,table),'\n')
-    # print('test-2-table-show',show('something',table),'\n')
-    # print('test-3-table-show',show('something1',table),'\n')
-    # print(show(None,task))
-    # print(show(None,task,"demo_table3"))
-    # add('something',task, table='something',mark="to-do")
-    # delete("5", task, 'demo_table4')
-    # add(
-    #     name = 'no table task',
-    #     object = task,
-    #     mark = 'progress'
-    # )
-    pass
-
+if __name__ == "__main__":
+    print(DatabaseManagmentLanguage("hello world"))

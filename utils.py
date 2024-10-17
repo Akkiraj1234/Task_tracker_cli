@@ -1,4 +1,5 @@
 from database import system, task, table, os
+from typing import *
 import sys
 import argparse
 import time
@@ -270,6 +271,8 @@ class todo_table:
             ]
         )+ f"{' '*padding}└{'─'*col1}┴{'─'*(w-5-col1-col3-col4)}┴{'─'*col3}┴{'─'*col4}┘\n"
 
+
+Color = CILcolor()
 
 if __name__ == "__main__":
     new_input = SmartInput()
